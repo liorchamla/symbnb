@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ controller_name }}!{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron">
+      <h1 class="display-3">Hello, world!</h1>
+      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+      <hr class="my-4">
+      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+      </p>
+    </div>
+    
+    <section class="ads">
+        <h2 class="h1 my-5">Voyez tous nos appartements ! </h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-light mb-3">
+                  <div class="card-header">Header</div>
+                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
+
+                  <div class="card-body">
+                    <h4 class="card-title">Light card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light mb-3">
+                  <div class="card-header">Header</div>
+                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
+
+                  <div class="card-body">
+                    <h4 class="card-title">Light card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light mb-3">
+                  <div class="card-header">Header</div>
+                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
+
+                  <div class="card-body">
+                    <h4 class="card-title">Light card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="vip">
+        <h2 class="h1 my-5">Nos propriétaires stars !</h2>
+        
+        <div class="row">
+            <div class="col">
+                <div class="card border-secondary mb-3">
+                  {#<div class="card-header">Header</div>#}
+                  <div class="card-body">
+                    <h4 class="card-title">Secondary card title</h4>
+                    <div class="card-text">
+                        <img class="float-left mr-3" src="http://placehold.it/64x64" />
+                        <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+             <div class="col">
+                <div class="card border-secondary mb-3">
+                  {#<div class="card-header">Header</div>#}
+                  <div class="card-body">
+                    <h4 class="card-title">Secondary card title</h4>
+                    <div class="card-text">
+                        <img class="float-left mr-3" src="http://placehold.it/64x64" />
+                        <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
