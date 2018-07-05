@@ -25,7 +25,10 @@
                         <div class="carousel-inner">
                             {% for image in ad.images %}
                             <div class="carousel-item {% if loop.index == 1 %} active {% endif %}">
-                                <img class="d-block w-100" src="{{image}}" alt="Image {{loop.index}}">
+                                <img class="d-block w-100" src="{{image.url}}" alt="Image {{loop.index}}">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>{{image.caption}}</h5>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
