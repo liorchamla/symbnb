@@ -40,6 +40,8 @@ class AdController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+            $ad->setOwner($this->getUser());
+            
             $manager->persist($ad);
             $manager->flush();
 
