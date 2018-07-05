@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/ad", name="ads")
@@ -29,6 +30,7 @@ class AdController extends Controller
 
     /**
      * @Route("/new", name="_create")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function form(Request $request, ObjectManager $manager, Ad $ad = null, $slug = null) {
         $ad = new Ad();
@@ -56,6 +58,7 @@ class AdController extends Controller
 
     /**
      * @Route("/{slug}/edit", name="_edit")
+     * @Security("is_granted('ROLE_USER') and user === ad.getOwner()", message="Vous ne pouvez pas modifier une annonce qui n'est pas la votre !")
      */
     public function edit(Request $request, ObjectManager $manager, Ad $ad, string $slug) {
         $form = $this->createForm(AdType::class, $ad);
@@ -82,6 +85,7 @@ class AdController extends Controller
 
     /**
      * @Route("/{slug}/delete", name="_delete")
+     * @Security("is_granted('ROLE_USER') and ad.getOwner() === user")
      */
     public function delete(Ad $ad, string $slug, ObjectManager $manager){
         $manager->remove($ad);
