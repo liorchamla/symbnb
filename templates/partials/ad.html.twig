@@ -1,0 +1,19 @@
+<div class="col-md-4">
+    <div class="card bg-light mb-3">
+        <div class="card-header text-center">{{ad.rooms}} chambres, <strong>{{ad.price|number_format(2,',', ' ')}}&euro; / nuit</strong></div>
+        
+        <a href="{{ path('ads_show', {slug: ad.slug}) }}">
+            <img style="height: 200px; width: 100%; display: block;" src="{{ad.coverImage}}" alt="Image de l'annonce {{ad.title}}">
+        </a>
+
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ path('ads_show', {slug: ad.slug}) }}">
+                    {{ ad.title }}
+                </a>
+            </h4>
+            <p class="card-text">{{ad.introduction}}</p>
+            <a href="{{ path('ads_show', {slug: ad.slug}) }}" class="btn btn-primary float-right">En savoir plus !</a>
+        </div>
+    </div>
+</div>

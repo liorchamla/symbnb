@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Ad
 {
@@ -62,6 +63,17 @@ class Ad
      */
     private $rooms;
 
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function generateSlug(){
+        if(empty($this->slug)){
+            $slugifier = new Slugify();
+            $this->slug = $slugifier->slugify($this->title);
+        }
+    }
+
     public function getId()
     {
         return $this->id;
@@ -75,11 +87,6 @@ class Ad
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        if(empty($this->slug)) {
-            $slugifier = new Slugify();
-            $this->slug = $slugifier->slugify($title);
-        }
 
         return $this;
     }

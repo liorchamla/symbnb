@@ -2,13 +2,21 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(
+ *  fields={"email"},   
+ *  message="Un compte avec cette adresse email existe déjà ! Merci d'en choisir une autre"
+ * )
  */
 class User implements UserInterface, \Serializable
 {
@@ -21,16 +29,19 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="Veuillez entrer une adresse email valide !")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="3", max="100", minMessage="Votre prénom doit faire au moins 3 caractères", maxMessage="Votre prénom ne peut pas faire plus de 100 caractères !")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="3", max="100", minMessage="Votre nom de famille doit faire au moins 3 caractères", maxMessage="Votre nom de famille ne peut pas faire plus de 100 caractères !")
      */
     private $lastName;
 
@@ -41,6 +52,7 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url(message="Veuillez entrer une URL valide !")
      */
     private $picture;
 
@@ -56,8 +68,26 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="8", minMessage="Votre mot de passe ne peut pas être inférieur à 8 caractères")
      */
     private $password;
+
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas tapé le même mot de passe !")
+     */
+    public $password_confirm;
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function generateSlug() {
+        $slugifier = new Slugify();
+        $slug = $slugifier->slugify($this->firstName . ' ' . $this->lastName);
+        if(empty($this->slug) || $this->slug !== $slug) {
+            $this->slug = $slug;
+        }
+    }
 
     public function __construct()
     {
@@ -210,7 +240,7 @@ class User implements UserInterface, \Serializable
     {
         return serialize(array(
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
             // see section on salt below
             // $this->salt,
@@ -222,7 +252,7 @@ class User implements UserInterface, \Serializable
     {
         list (
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
             // see section on salt below
             // $this->salt

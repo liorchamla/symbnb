@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="registration-form">
+
+    <div class="container">
+        <h1>Créez votre compte sur SymBNB</h1>
+        <p>Et bénéficiez de toutes nos fonctionnalités gratuitement !</p>
+
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">{{form_row(form.firstName)}}</div>
+            <div class="col-md-6">{{form_row(form.lastName)}}</div>
+        </div>
+        {{ form_widget(form)}}
+        <button type="submit" class="btn btn-success">Je m'inscris !</button>
+        {{ form_end(form) }}
+    </div>
+
+</section>
+
+{% endblock %}

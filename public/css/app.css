@@ -22,8 +22,13 @@ div.ad-title h1, div.ad-title p {
 
 img.avatar {
     border-radius: 50%;
+    max-width: 100%;
 }
 
 img.avatar.avatar-medium {
-    max-width: 64px;
+    width: 64px;
+}
+
+img.avatar.avatar-large {
+    width: 128px;
 }

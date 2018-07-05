@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="profile-form">
+    <div class="container">
+        <h1>Modifiez votre profile ici !</h1>
+        {{form_start(form)}}
+        {{form_widget(form)}}
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Enregistrer les modifications !</button>
+        </div>
+        {{form_end(form)}}
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/ckeditor.min.js"></script>
+    <script>
+
+        /**
+         * Mise en place de l'éditeur riche CKEditor
+         */
+        let editor;
+
+        // Instanciation
+        ClassicEditor
+            // On créé l'instance sur l'élément ad_content (textarea)
+            .create( document.querySelector( '#account_description' ) )
+            // Une fois que c'est fait, on référence l'instance dans la variable editor
+            .then(instance => editor = instance)
+            .catch( error => {
+                console.error( error );
+            });
+
+
+        /**
+         * Gestion de la soumission dans le cas d'une description vide !
+         */
+        $('form[name="account"]').submit((e) => {
+            const data = editor.getData();
+            if(data.trim() === '' || data.trim() === '<p>&nbsp;</p>') {
+                e.preventDefault();
+                alert('Vous devez fournir une description détaillée pour votre bien !');
+            }
+        })
+    </script>
+{% endblock %}

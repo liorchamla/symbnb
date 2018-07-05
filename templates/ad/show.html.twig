@@ -6,7 +6,7 @@
             <div class="container">
                 <h1>{{ad.title}}</h1>
                 <p>{{ad.introduction}}</p>
-                <p class="h2"><strong>{{ad.rooms}} chambres</strong> pour <strong>{{ad.price}}&euro; par nuit !</strong></p>
+                <p class="h2"><strong>{{ad.rooms}} chambres</strong> pour <strong>{{ad.price|number_format(2, ",", " ")}}&euro; par nuit !</strong></p>
                 <a href="#" class="btn btn-primary btn-lg">Réserver !</a>
             </div>
         </div>
@@ -45,10 +45,14 @@
                     {% else %}
                         <div class="row align-items-center mb-3">
                             <div class="col-4 text-center">
-                                <img class="avatar avatar-medium" src="{{ad.owner.picture}}" alt="Photo de {{ad.owner.firstName}}">
+                                <a href="{{path('user_profile', {'slug': ad.owner.slug})}}">
+                                    <img class="avatar avatar-medium" src="{{ad.owner.picture}}" alt="Photo de {{ad.owner.firstName}}">
+                                </a>
                             </div>
                             <div class="col">
-                                <h3>{{ad.owner.firstName}} {{ad.owner.lastName}}</h3>
+                                <a href="{{path('user_profile', {'slug': ad.owner.slug})}}">
+                                    <h3>{{ad.owner.firstName}} {{ad.owner.lastName}}</h3>
+                                </a>
                                 <span class="badge badge-primary">{{ad.owner.ads | length }} annonces</span>
                             </div>
                         </div>

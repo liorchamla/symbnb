@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="account">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-3 text-center">
+                <img src="{{user.picture}}" alt="Avatar de {{user.firstName}}" class="avatar avatar-large mb-2">
+                <br>
+                <span class="badge badge-primary">{{user.ads|length}} annonces</span>
+            </div>
+            <div class="col-9">
+                <h1>{{user.firstName}} {{user.lastName}}</h1>
+                {% if user is same as(app.user) %}
+                    <div class="mt-3">
+                        <a href="{{path('account_profile')}}" class="btn btn-primary mr-2 mb-2">Modifier mes informations</a>
+                        <a href="{{path('account_password_update')}}" class="btn btn-primary mb-2">Modifier mon mot de passe</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {{user.description | raw}}
+        <hr>
+        <h2>Les annonces de {{user.firstName}}</h2>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt pariatur aspernatur, odit fuga quisquam fugit delectus error eos dolores sequi?</p>
+        {% if user.ads|length > 0 %}
+        <div class="row">
+            {% for ad in user.ads %}
+                {% include 'partials/ad.html.twig' %}
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="alert alert-warning">
+                <p>
+                    <strong>{{user.firstName}}</strong> n'a pas encore d'annonce sur le site !
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
