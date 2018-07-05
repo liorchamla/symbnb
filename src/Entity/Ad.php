@@ -66,7 +66,7 @@ class Ad
     private $rooms;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad", cascade={"persist"}, orphanRemoval=true)
      */
     private $images;
 
