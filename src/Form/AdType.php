@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Ad;
+use App\Form\ImageType;
+use App\Form\ApplicationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,14 +15,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class AdType extends AbstractType
+class AdType extends ApplicationType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, ['label' => "Titre de l'annonce", 'attr' => [
-                'placeholder' => "Tappez le titre de l'annonce !"
-            ]])
+            ->add('title', TextType::class, $this->getConfiguration("Titre de l'annonce", "Tappez le titre de l'annonce !"))
             ->add('slug', TextType::class, ['label' => "Chemin d'URL (optionnel)", 'required' => false, 'attr' => [
                 'placeholder' => "Précisez vous-même ou laissez le système le faire !"
             ]])
@@ -39,14 +39,7 @@ class AdType extends AbstractType
             ->add('rooms', NumberType::class, ['label' => "Nombre de chambres", 'attr' => [
                     'placeholder' => "Nombre de chambres disponibles"
                     ]])
-            ->add('images', CollectionType::class, ['label' => "Autres images", 'entry_type' => UrlType::class, 'entry_options' => [
-                'label_attr' => [
-                    'style' => 'display:none;'
-                ],
-                'attr' => [
-                    'placeholder' => "URL d'une image complémentaire"
-                ]
-                ], 'allow_add' => true, 'allow_delete' => true, 'delete_empty' => true])
+            ->add('images', CollectionType::class, ['label' => "Autres images", 'entry_type' => ImageType::class, 'allow_add' => true, 'allow_delete' => true, 'delete_empty' => true, 'entry_options' => ['label' => false], 'by_reference' => false])
         ;
     }
 
