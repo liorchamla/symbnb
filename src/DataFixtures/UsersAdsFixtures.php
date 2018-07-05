@@ -2,12 +2,12 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Ad;
+use Faker\Factory;
+use App\Entity\Role;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Faker\Factory;
-use App\Entity\User;
-use App\Entity\Ad;
-use Cocur\Slugify\Slugify;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
@@ -23,7 +23,24 @@ class UsersAdsFixtures extends Fixture
     {
         // Mise en place
         $faker      = Factory::create('fr-FR');
-        $slugifier  = new Slugify();
+
+        // Mise en place des rôles
+        $adminRole = new Role();
+        $adminRole->setId(1)
+                  ->setTitle('ROLE_ADMIN');
+
+        // Mise en place de l'admin
+        $adminUser = new User();
+        $adminUser->setFirstName('Lior')
+                    ->setLastName('Chamla')
+                    ->setEmail('lchamla@gmail.com')
+                    ->setPassword($this->encoder->encodePassword($adminUser, 'password'))
+                    ->setPicture('https://avatars.io/twitter/liiorc')
+                    ->setDescription('<p>' . join($faker->paragraphs(mt_rand(1, 8)), '</p><p>') . '</p>')
+                    ->addUserRole($adminRole);
+        
+        $manager->persist($adminRole);
+        $manager->persist($adminUser);
         
         // Mise en place des utilisateurs
         $users = [];
@@ -35,7 +52,6 @@ class UsersAdsFixtures extends Fixture
             $gender     = $genders[mt_rand(0,1)];
             $firstName  = $faker->firstName($gender);
             $lastName   = $faker->lastName($gender);
-            $slug       = $slugifier->slugify("$firstName $lastName");
             $picture    = 'https://randomuser.me/api/portraits/' . ($gender === 'male' ? 'men' : 'women') . '/' . $faker->numberBetween(0, 99) . '.jpg';
             $password   = $this->encoder->encodePassword($user, 'password');
             $description = '<p>' . join($faker->paragraphs(mt_rand(1, 8)), '</p><p>') . '</p>';
@@ -45,7 +61,6 @@ class UsersAdsFixtures extends Fixture
                 ->setFirstName($firstName)
                 ->setLastName($lastName)
                 ->setEmail($email)
-                ->setSlug($slug)
                 ->setPicture($picture)
                 ->setPassword($password)
                 ->setDescription($description);
@@ -59,7 +74,6 @@ class UsersAdsFixtures extends Fixture
             $ad = new Ad();
             
             $title          = $faker->sentence();
-            $slug           = $slugifier->slugify($title);
             $introduction   = $faker->sentence(mt_rand(10, 15));
             $content        = '<p>' . join($faker->paragraphs(mt_rand(3, 8)), '</p><p>') . '</p>';
             $cover          = $faker->imageUrl(1200, 500);
@@ -76,7 +90,6 @@ class UsersAdsFixtures extends Fixture
             $owner  = $users[mt_rand(0, count($users) - 1)];
             
             $ad->setTitle($title)
-                ->setSlug($slug)
                 ->setIntroduction($introduction)
                 ->setContent($content)
                 ->setCoverImage($cover)

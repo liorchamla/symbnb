@@ -78,6 +78,11 @@ class User implements UserInterface, \Serializable
     public $password_confirm;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
+     */
+    private $userRoles;
+
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
@@ -92,6 +97,7 @@ class User implements UserInterface, \Serializable
     public function __construct()
     {
         $this->ads = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     public function getId()
@@ -224,7 +230,9 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return array_merge(['ROLE_USER'], $this->getUserRoles()->map(function($role) {
+            return $role->getTitle();
+        })->toArray());
     }
 
     public function eraseCredentials()
@@ -257,5 +265,33 @@ class User implements UserInterface, \Serializable
             // see section on salt below
             // $this->salt
         ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+    /**
+     * @return Collection|Role[]
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(Role $userRole): self
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles[] = $userRole;
+            $userRole->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(Role $userRole): self
+    {
+        if ($this->userRoles->contains($userRole)) {
+            $this->userRoles->removeElement($userRole);
+            $userRole->removeUser($this);
+        }
+
+        return $this;
     }
 }
