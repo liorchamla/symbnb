@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -21,9 +23,11 @@ class AccountController extends Controller
 {
     /**
      * @Route("/", name="_index")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function myAccount(){
         $user = $this->getUser();
+
         return $this->render('user/index.html.twig', [
             'user' => $user
         ]);
@@ -31,9 +35,11 @@ class AccountController extends Controller
 
     /**
      * @Route("/password-update", name="_password_update")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function passwordUpdate(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder){
         $user = $this->getUser();
+
         $passwordUpdate = new PasswordUpdate();
         $form = $this->createForm(PasswordUpdateType::class, $passwordUpdate);
 
@@ -72,9 +78,11 @@ class AccountController extends Controller
 
     /**
      * @Route("/profile", name="_profile")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function profile(Request $request, ObjectManager $manager) {
         $user = $this->getUser();
+
         $form = $this->createForm(AccountType::class, $user);
 
         $form->handleRequest($request);
@@ -95,9 +103,20 @@ class AccountController extends Controller
 
     /**
      * @Route("/register", name="_registration")
+     * Ici, on préfère gérer la sécurité manuellement dans la fonction
      */
     public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder) {
+        if($this->getUser()) {
+            $this->addFlash(
+                'danger',
+                "Vous n'allez tout de même pas vous ré-inscrire alors même que vous êtes déjà connecté !"
+            );
+
+            return $this->redirectToRoute('account_index');
+        }
+
         $user = new User();
+
         $form = $this->createForm(RegistrationType::class, $user);
 
         $form->handleRequest($request);
@@ -129,6 +148,14 @@ class AccountController extends Controller
      * @Route("/login", name="_login")
      */
     public function login(){
+        if($this->getUser()) {
+            $this->addFlash(
+                'danger',
+                "Vous êtes déjà connecté, aucun intérêt à vous reconnecter non ?"
+            );
+
+            return $this->redirectToRoute('account_index');
+        }
         return $this->render('account/login.html.twig');
     }
 
