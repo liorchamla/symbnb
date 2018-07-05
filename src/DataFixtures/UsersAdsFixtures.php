@@ -6,6 +6,7 @@ use App\Entity\Ad;
 use Faker\Factory;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\Image;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -77,28 +78,29 @@ class UsersAdsFixtures extends Fixture
             $introduction   = $faker->sentence(mt_rand(10, 15));
             $content        = '<p>' . join($faker->paragraphs(mt_rand(3, 8)), '</p><p>') . '</p>';
             $cover          = $faker->imageUrl(1200, 500);
-            $imagesArray    = [];
-            
-            for($j = 0; $j < mt_rand(2, 10); $j++) {
-                $imagesArray[] = $faker->imageUrl();
-            }
-            
-            $images = json_encode($imagesArray);
-            $price  = round(mt_rand(3000, 25000) / 1000, 2);
-            $rooms  = mt_rand(1, 6);
-            
-            $owner  = $users[mt_rand(0, count($users) - 1)];
+            $price          = round(mt_rand(3000, 25000) / 1000, 2);
+            $rooms          = mt_rand(1, 6);
+            $owner          = $users[mt_rand(0, count($users) - 1)];
             
             $ad->setTitle($title)
                 ->setIntroduction($introduction)
                 ->setContent($content)
                 ->setCoverImage($cover)
-                ->setImages($images)
                 ->setPrice($price)
                 ->setOwner($owner)
                 ->setRooms($rooms);
                 
             $manager->persist($ad);
+
+            // Images pour l'appartement
+            for($j = 0; $j < mt_rand(2, 10); $j++) {
+                $image = new Image();
+                $image->setUrl($faker->imageUrl())
+                        ->setCaption($faker->sentence())
+                        ->setAd($ad);
+                $manager->persist($image);
+            }
+                
         }
         
         // $product = new Product();

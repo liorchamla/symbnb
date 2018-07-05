@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,11 +46,6 @@ class Ad
     private $coverImage;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $images;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $price;
@@ -62,6 +59,16 @@ class Ad
      * @ORM\Column(type="integer")
      */
     private $rooms;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad")
+     */
+    private $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     /**
      * @ORM\PrePersist
@@ -143,29 +150,7 @@ class Ad
 
         return $this;
     }
-
-    public function getImages()
-    {
-        return json_decode($this->images);
-    }
-
-    public function setImages($images): self
-    {
-        $this->images = json_encode($images);
-
-        return $this;
-    }
-
-    public function getImagesAsJSON() {
-        return $this->images;
-    }
-
-    public function setImagesAsJSON($json) {
-        $this->images = $json;
-
-        return $this;
-    }
-
+    
     public function getPrice(): ?float
     {
         return $this->price;
@@ -198,6 +183,37 @@ class Ad
     public function setRooms(int $rooms): self
     {
         $this->rooms = $rooms;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getAd() === $this) {
+                $image->setAd(null);
+            }
+        }
 
         return $this;
     }
