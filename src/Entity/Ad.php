@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(
+ *  fields={"title"},
+ *  message="Une annonce porte déjà ce titre, vous devriez en changer ;-)"
+ * )
  */
 class Ad
 {
@@ -61,7 +66,7 @@ class Ad
     private $rooms;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad")
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="ad", cascade={"persist"})
      */
     private $images;
 
