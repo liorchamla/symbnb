@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme adForm _self %}
+
+{% block body %}
+    <section class="ad-create">
+        <div class="container">
+            <h1>Créez une nouvelle annonce !</h1>
+            {{ form_start(adForm) }}
+            {{ form_widget(adForm) }}
+
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Créer l'annonce !</button>
+            </div>
+
+            {{ form_end(adForm) }}
+        </div>
+    </section>
+{% endblock %}
+
+{% block _ad_images_widget %}
+    <p>Ici, vous pouvez ajouter vos propres images !</p>
+    
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <button type="button" id="add-image" class="btn btn-sm btn-primary">Ajouter</button>
+    </div>
+{% endblock %}
+
+{% block _ad_images_entry_widget %}
+    <div class="form-group" id="block_{{id}}">
+        <div class="row">
+            <div class="col-9">
+                <input type="url" class="form-control" name="{{full_name}}" id="{{id}}" placeholder="URL d'une image complémentaire" value="{{value}}">
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger" data-action="delete" data-target="#block_{{id}}">X</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/ckeditor.min.js"></script>
+    <script>
+
+        /**
+         * Mise en place de l'éditeur riche CKEditor
+         */
+        let editor;
+
+        // Instanciation
+        ClassicEditor
+            // On créé l'instance sur l'élément ad_content (textarea)
+            .create( document.querySelector( '#ad_content' ) )
+            // Une fois que c'est fait, on référence l'instance dans la variable editor
+            .then(instance => editor = instance)
+            .catch( error => {
+                console.error( error );
+            });
+
+        /**
+         * Possibilité d'ajout d'autres images
+         */
+        $('#add-image').click(function(){
+            // On récupère le nombre d'images déjà présentes
+            const index = $('#ad_images .form-group').length;
+            // On récupère le prototype qui sert à afficher les contrôles pour une image
+            const tmpl = $('#ad_images').data('prototype').replace(/__name__/g, index);
+            // On créé un élément qui correspond au prototype
+            const element = $(tmpl);
+            // On l'ajoute à la div #ad_images
+            $('#ad_images').append(element);
+            
+            // On réapplique les gestionnaires d'événement pour les boutons de suppression
+            $('[data-action="delete"]').click(function(){
+                $(this.dataset.target).remove();
+            })
+        });
+
+        /**
+         * Gestion de la soumission dans le cas d'une description vide !
+         */
+        $('form[name="ad"]').submit((e) => {
+            const data = editor.getData();
+            if(data.trim() === '' || data.trim() === '<p>&nbsp;</p>') {
+                e.preventDefault();
+                alert('Vous devez fournir une description détaillée pour votre bien !');
+            }
+        })
+    </script>
+{% endblock %}

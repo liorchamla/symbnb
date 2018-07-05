@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -75,6 +76,11 @@ class Ad
     {
         $this->title = $title;
 
+        if(empty($this->slug)) {
+            $slugifier = new Slugify();
+            $this->slug = $slugifier->slugify($title);
+        }
+
         return $this;
     }
 
@@ -83,9 +89,14 @@ class Ad
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(string $slug = null): self
     {
-        $this->slug = $slug;
+        $this->slug = $slug ? $slug : '';
+        
+        if(empty($this->slug)) {
+            $slugifier = new Slugify();
+            $this->slug = $slugifier->slugify($this->title);
+        }
 
         return $this;
     }
@@ -128,12 +139,22 @@ class Ad
 
     public function getImages()
     {
-        return $this->images;
+        return json_decode($this->images);
     }
 
     public function setImages($images): self
     {
-        $this->images = $images;
+        $this->images = json_encode($images);
+
+        return $this;
+    }
+
+    public function getImagesAsJSON() {
+        return $this->images;
+    }
+
+    public function setImagesAsJSON($json) {
+        $this->images = $json;
 
         return $this;
     }
