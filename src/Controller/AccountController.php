@@ -34,6 +34,14 @@ class AccountController extends Controller
     }
 
     /**
+     * @Route("/bookings", name="_bookings")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function bookings() {
+        return $this->render('account/bookings.html.twig');
+    }
+
+    /**
      * @Route("/password-update", name="_password_update")
      * @Security("is_granted('ROLE_USER')")
      */
