@@ -29,6 +29,10 @@ img.avatar.avatar-medium {
     width: 64px;
 }
 
+img.avatar.avatar-mini {
+    width: 32px;
+}
+
 img.avatar.avatar-large {
     width: 128px;
 }
