@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookingRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Booking
 {
@@ -34,11 +36,14 @@ class Booking
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Date(message="Attention, la date d'arrivée doit être une date !")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Date(message="Attention, la date de départ doit être une date !")
+     * @Assert\GreaterThan(propertyPath="startDate", message="La date de départ doit être plus grande que la date d'arrivée !")
      */
     private $endDate;
 
@@ -46,6 +51,37 @@ class Booking
      * @ORM\Column(type="float")
      */
     private $amount;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(){
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+
+        if(empty($this->amount)) {
+            $this->amount = $this->ad->getPrice() * count($this->getDays());
+        }
+    }
+
+    public function getDays() {
+        $dateStart  = $this->startDate->format('Y-m-d');
+        $dateEnd    = $this->endDate->format('Y-m-d');
+        // On calcule l'intervale en jours (86400 millisecondes)
+        $range  = range(strtotime($dateStart), strtotime($dateEnd), 86400);
+        
+        $days   = array_map(function($day) {
+            return new \DateTime(date('Y-m-d', $day));
+        }, $range);
+
+        return $days;  
+    }
 
     public function getId()
     {
@@ -120,6 +156,18 @@ class Booking
     public function setAmount(float $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

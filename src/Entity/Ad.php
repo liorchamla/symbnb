@@ -259,4 +259,23 @@ class Ad
 
         return $this;
     }
+
+    public function getNotAvailableDays() {
+        $notAvailableDays = [];
+        // Pour chaque réservation
+        foreach($this->bookings as $booking) {
+            $dateStart  = $booking->getStartDate()->format('Y-m-d');
+            $dateEnd    = $booking->getEndDate()->format('Y-m-d');
+            // On calcule l'intervale en jours (86400 millisecondes)
+            $range  = range(strtotime($dateStart), strtotime($dateEnd), 86400);
+            
+            $days   = array_map(function($day) {
+                return new \DateTime(date('Y-m-d', $day));
+            }, $range);
+
+            $notAvailableDays = array_merge($notAvailableDays, $days);
+        }
+
+        return $notAvailableDays;
+    }
 }

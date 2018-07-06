@@ -111,12 +111,14 @@ class UsersAdsFixtures extends Fixture
                 $endDate    = (clone $startDate)->modify('+3 days');
                 $amount     = $ad->getPrice() * 3;
                 $booker     = $users[mt_rand(0, count($users) -1)];
+                $comment    = $faker->paragraph();
                 
                 $booking->setBooker($booker)
                         ->setCreatedAt($createdAt)
                         ->setStartDate($startDate)
                         ->setEndDate($endDate)
                         ->setAmount($amount)
+                        ->setComment($comment)
                         ->setAd($ad);
                 
                 $manager->persist($booking);

@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<section class="booking-form">
+    <div class="container">
+        <h1>Réservez pour l'appartement : <em>{{ad.title}}</em></h1>
+        <p>Vous êtes sur le point de réserver le bien de <strong>{{ad.owner.firstName}} {{ad.owner.lastName}}</strong>, dites nous tout, on s'occupe du reste !</p>
+
+        {{ form_start(form) }}
+        <div class="alert alert-light">
+            <h2>Commencez par nous dire quelles sont les dates qui vous intéressent !</h2>
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.startDate) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.endDate) }}
+                </div>
+            </div>
+            <h4>Montant du séjour : <span id="amount">...</span> &euro;</h4>
+            <span id="days">0</span> nuit(s) à {{ad.price | number_format(2, ',', ' ')}} &euro; par nuit)
+        </div>
+        <h2>Vous avez un commentaire à faire ?</h2>
+        {{form_row(form.comment)}}
+
+        <h2>Vous avez terminé !</h2>
+        <p>Vacances de rêve ? Hébergement pour le boulot ? Peu importe, on est avec vous !</p>
+        <button type="submit" class="btn btn-success">Je réserve !</button>
+        {{form_end(form)}}
+    </div>
+</section>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/bootstrap-datepicker.min.js"></script>
+    <script>
+
+        $('form').submit((e) => {
+            if(!verifyDates()) e.preventDefault();
+        });
+
+        $('#booking_endDate').on('change', (e) => {
+            // On vérifie les dates
+            verifyDates();
+            // On calcule le montant
+            calculateAmount();
+        })
+
+        function verifyDates(){
+            const endDate = new Date($('#booking_endDate').val());
+            const startDate = new Date($('#booking_startDate').val());
+
+            if(startDate && startDate > endDate) {
+                alert("Vous devez choisir une date de départ plus éloignée que la date d'arrivée !");
+                return false;
+            }
+
+            return true;
+        }
+
+        function calculateAmount(){
+            const endDate = new Date($('#booking_endDate').val());
+            const startDate = new Date($('#booking_startDate').val());
+            
+            if(startDate && startDate < endDate) {
+                const dayTime = 60 * 60 * 24 * 1000;
+                const interval = endDate.getTime() - startDate.getTime();
+                const days = interval / dayTime;
+                const amount = days * {{ad.price}}
+                $('#amount').text(amount.toLocaleString('fr-FR'));
+                $('#days').text(days);
+            }
+        }
+
+        $(document).ready(calculateAmount);
+    </script>
+{% endblock %}
