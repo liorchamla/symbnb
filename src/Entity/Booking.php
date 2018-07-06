@@ -61,21 +61,30 @@ class Booking
      * @ORM\PrePersist
      */
     public function prePersist(){
+        // Mise en place de la date de création
         if(empty($this->createdAt)) {
             $this->createdAt = new \DateTime();
         }
 
+        // Mise en place du montant de la réservation
         if(empty($this->amount)) {
+            // On prend le prix de l'annonce x le nombre de jours
             $this->amount = $this->ad->getPrice() * count($this->getDays());
         }
     }
 
+    /**
+     * Permet de récupérer le nombre de jours de la réservation
+     * @return array 
+     */
     public function getDays() {
         $dateStart  = $this->startDate->format('Y-m-d');
         $dateEnd    = $this->endDate->format('Y-m-d');
+        
         // On calcule l'intervale en jours (86400 millisecondes)
         $range  = range(strtotime($dateStart), strtotime($dateEnd), 86400);
         
+        // On retourne un tableau de DateTime
         $days   = array_map(function($day) {
             return new \DateTime(date('Y-m-d', $day));
         }, $range);

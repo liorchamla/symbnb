@@ -260,6 +260,10 @@ class Ad
         return $this;
     }
 
+    /**
+     * Permet de récupérer toutes les journées non disponibles pour cette annonce
+     * @return array
+     */
     public function getNotAvailableDays() {
         $notAvailableDays = [];
         // Pour chaque réservation
