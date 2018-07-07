@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+<section class="admin-comments">
+    <div class="container-fluid">
+        <h1 class="my-3">Gestion des commentaires</h1>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Auteur</th>
+                    <th>Annonce</th>
+                    <th>Commentaire</th>
+                    <th class="text-center">Note</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                <tr>
+                    <td>{{comment.id}}</td>
+                    <td>
+                        <img src="{{comment.author.picture}}" class="avatar avatar-micro mr-2">
+                        {{comment.author.firstName}} {{comment.author.lastName}}
+                    </td>
+                    <td width="20%">{{comment.ad.title}}</td>
+                    <td width="40%">{{comment.content}}</td>
+                    <td class="text-center" style="vertical-align: middle">
+                        <span class="badge badge-primary">
+                            {{comment.rating}}
+                        </span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a href="#" onclick="return confirm(`Êtes vous bien sûr de vouloir supprimer ce commentaire ?!`)" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
