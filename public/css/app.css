@@ -40,3 +40,15 @@ img.avatar.avatar-large {
 .datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
     color: firebrick !important;
 }
+
+.alert a {
+    text-decoration: none;
+}
+
+.alert a.btn {
+    color: white;
+}
+
+span.rating i {
+    color: goldenrod;
+}
