@@ -72,12 +72,12 @@ class Ad
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="ad")
+     * @ORM\OneToMany(targetEntity="App\Entity\Booking", mappedBy="ad", orphanRemoval=true)
      */
     private $bookings;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="ad")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="ad", orphanRemoval=true)
      */
     private $comments;
 
