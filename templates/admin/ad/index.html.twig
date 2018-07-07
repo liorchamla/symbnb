@@ -3,26 +3,26 @@
 {% block body %}
     <section class="admin-ads">
         <div class="container-fluid">
-            <h1 class="my-2">Les annonces</h1>
+            <h1 class="my-3">Gestion des annonces</h1>
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th class="d-none d-md-block">Id</th>
                         <th>Titre</th>
                         <th>Auteur</th>
-                        <th>Réservations</th>
-                        <th>Note</th>
+                        <th class="d-none d-md-block">Réservations</th>
+                        <th class="d-none d-md-block">Note</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ad in ads %}
                         <tr>
-                            <td>{{ad.id}}</td>
+                            <td class="d-none d-md-block">{{ad.id}}</td>
                             <td>{{ad.title}}</td>
                             <td><img src="{{ad.owner.picture}}" class="avatar avatar-micro mr-1"> {{ad.owner.firstName}} {{ad.owner.lastName}}</td>
-                            <td class="text-center"><span class="badge badge-primary rounded">{{ad.bookings|length}}</span></td>
-                            <td class="text-center"><span class="badge badge-primary rounded">{{ad.avgRatings|number_format(1, ',', ' ')}}</span></td>
+                            <td class="text-center d-none d-md-block"><span class="badge badge-primary rounded">{{ad.bookings|length}}</span></td>
+                            <td class="text-center d-none d-md-block"><span class="badge badge-primary rounded">{{ad.avgRatings|number_format(1, ',', ' ')}}</span></td>
                             <td></td>
                         </tr>
                     {% endfor %}
