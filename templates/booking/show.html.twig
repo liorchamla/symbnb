@@ -40,7 +40,7 @@
                             <dt class="col-md-4">Montant total :</dt>
                             <dd class="col-md-8">{{booking.amount|number_format(2, ',', ' ')}} &euro;</dd>
                             <dt class="col-md-4">Commentaire :</dt>
-                            <dd class="col-md-8">{{booking.comment}}</dd>
+                            <dd class="col-md-8">{{booking.comment|default("Aucun commentaire")}}</dd>
                         </dl>
                         <hr>
                         <h2 class="alert-heading">Votre hôte</h2>
@@ -58,6 +58,23 @@
                         </div>
                         {{owner.description|raw}}
                         <a href="{{ path("user_profile", {"slug": owner.slug}) }}" class="btn btn-primary">Plus d'infos sur {{owner.firstName}}</a>
+                    </div>
+
+                    <div class="alert alert-light" id="comment">
+                        <h2 class="alert-heading">Votre avis compte !</h2>
+                        {% set comment = booking.ad.commentFromAuthor(app.user) %}
+                        {% if comment is not null %}
+                            <blockquote>
+                                {{comment.content}}
+                            </blockquote>
+                            {% set rating = comment.rating %}
+                            <strong>Note : </strong> {% include 'partials/rating.html.twig' %}
+                        {% else %}
+                            {{form_start(form)}}
+                            {{form_widget(form)}}
+                            <button type="submit" class="btn btn-success">Je confirme mon avis !</button>
+                            {{form_end(form)}}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col">

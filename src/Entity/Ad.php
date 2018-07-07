@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -96,6 +97,23 @@ class Ad
             $slugifier = new Slugify();
             $this->slug = $slugifier->slugify($this->title);
         }
+    }
+
+    public function getCommentFromAuthor(User $user) {
+        foreach($this->comments as $comment) {
+            if($comment->getAuthor() === $user) return $comment;
+        }
+        return null;
+    }
+
+    public function getAvgRatings(){
+        $sum = array_reduce($this->comments->toArray(), function($total, $comment){
+            return $total + $comment->getRating();
+        }, 0);
+
+        if(count($this->comments)) return $sum / count($this->comments);
+
+        return 0;
     }
 
     public function getId()

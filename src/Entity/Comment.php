@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Comment
 {
@@ -40,6 +41,15 @@ class Comment
      * @ORM\Column(type="text")
      */
     private $content;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(){
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+    }
 
     public function getId()
     {
