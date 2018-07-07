@@ -33,6 +33,10 @@ img.avatar.avatar-mini {
     width: 32px;
 }
 
+img.avatar.avatar-micro {
+    width: 24px;
+}
+
 img.avatar.avatar-large {
     width: 128px;
 }

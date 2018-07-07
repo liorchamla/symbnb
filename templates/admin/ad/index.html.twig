@@ -1,0 +1,33 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <section class="admin-ads">
+        <div class="container-fluid">
+            <h1 class="my-2">Les annonces</h1>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>Réservations</th>
+                        <th>Note</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ad in ads %}
+                        <tr>
+                            <td>{{ad.id}}</td>
+                            <td>{{ad.title}}</td>
+                            <td><img src="{{ad.owner.picture}}" class="avatar avatar-micro mr-1"> {{ad.owner.firstName}} {{ad.owner.lastName}}</td>
+                            <td class="text-center"><span class="badge badge-primary rounded">{{ad.bookings|length}}</span></td>
+                            <td class="text-center"><span class="badge badge-primary rounded">{{ad.avgRatings|number_format(1, ',', ' ')}}</span></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
