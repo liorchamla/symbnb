@@ -7,23 +7,30 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th class="d-none d-md-block">Id</th>
+                        <th>Id</th>
                         <th>Titre</th>
                         <th>Auteur</th>
-                        <th class="d-none d-md-block">Réservations</th>
-                        <th class="d-none d-md-block">Note</th>
+                        <th class="text-center">Réservations</th>
+                        <th class="text-center">Note</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ad in ads %}
                         <tr>
-                            <td class="d-none d-md-block">{{ad.id}}</td>
+                            <td>{{ad.id}}</td>
                             <td>{{ad.title}}</td>
                             <td><img src="{{ad.owner.picture}}" class="avatar avatar-micro mr-1"> {{ad.owner.firstName}} {{ad.owner.lastName}}</td>
-                            <td class="text-center d-none d-md-block"><span class="badge badge-primary rounded">{{ad.bookings|length}}</span></td>
-                            <td class="text-center d-none d-md-block"><span class="badge badge-primary rounded">{{ad.avgRatings|number_format(1, ',', ' ')}}</span></td>
-                            <td></td>
+                            <td class="text-center"><span class="badge badge-dark rounded">{{ad.bookings|length}}</span></td>
+                            <td class="text-center"><span class="badge badge-dark rounded">{{ad.avgRatings|number_format(1, ',', ' ')}}</span></td>
+                            <td>
+                                <a href="{{path('admin_ads_edit', {'id': ad.id})}}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

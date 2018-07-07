@@ -1,0 +1,140 @@
+{% extends 'admin/base.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="alert alert-light">
+                    <h2 class="alert-heading mb-3">Corriger l'annonce ?</h2>
+                    {{form(form)}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2 class="alert-heading mb-3">Les réservations</h2>
+                    {% if ad.bookings|length >  0 %}
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Voyageur</th>
+                                    <th>Date de réservation</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in ad.bookings %} 
+                                    <tr>
+                                        <td>{{booking.id}}</td>
+                                        <td>{{booking.booker.firstName}}</td>
+                                        <td>{{booking.createdAt|date('d/m/Y')}}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            Aucune réservation pour cette annonce pour l'instant !
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="alert alert-light">
+                    <h2 class="alert-heading mb-3">Les commentaires</h2>
+                    {% if ad.comments|length > 0 %}
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Voyageur</th>
+                                    <th>Commentaire</th>
+                                    <th>Note</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for comment in ad.comments %}
+                                    <tr>
+                                        <td>{{comment.author.firstName}}</td>
+                                        <td><small>{{comment.content}}</small></td>
+                                        <td>{{comment.rating}}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block _admin_ad_images_widget %}    
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _admin_ad_images_entry_widget %}
+    <div class="row">
+        <div class="col-4">
+            {{ form_row(form.url) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.caption) }}
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-danger" data-action="delete" data-target="#block_{{id}}">X</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/ckeditor.min.js"></script>
+    <script>
+
+        /**
+         * Mise en place de l'éditeur riche CKEditor
+         */
+        let editor;
+
+        // Instanciation
+        ClassicEditor
+            // On créé l'instance sur l'élément ad_content (textarea)
+            .create( document.querySelector( '#admin_ad_content' ) )
+            // Une fois que c'est fait, on référence l'instance dans la variable editor
+            .then(instance => editor = instance)
+            .catch( error => {
+                console.error( error );
+            });
+
+        function refreshDeleteButtons(){
+            $('[data-action="delete"]').click(function(){
+                $(this).parent().parent().parent().remove();
+            })
+        }
+
+        refreshDeleteButtons();
+
+        /**
+         * Gestion de la soumission dans le cas d'une description vide !
+         */
+        $('form').submit((e) => {
+            const data = editor.getData();
+            if(data.trim() === '' || data.trim() === '<p>&nbsp;</p>') {
+                e.preventDefault();
+                alert('Vous devez fournir une description détaillée pour votre bien !');
+            }
+        })
+    </script>
+{% endblock %}
