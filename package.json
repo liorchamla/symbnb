@@ -9,5 +9,11 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^10.1.0",
+        "bootstrap": "^4.1.1",
+        "jquery": "^3.3.1",
+        "popper.js": "^1.14.3"
     }
 }

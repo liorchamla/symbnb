@@ -1,3 +1,12 @@
+/**
+ * Ici on importe les fichiers nécessaires (bootstrap, fontawesome et autres)
+ */
+@import url(./bootstrap.min.css);
+@import url(./fontawesome.min.css);
+
+/**
+ * Et bien sur on peut écrire le code que l'on souhaite ici (on pourrait même faire du sass)
+ */
 div.container {
     margin-top: 20px;
 }
