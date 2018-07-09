@@ -17,14 +17,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class AdController extends Controller
 {
     /**
-     * @Route("/", name="_index")
+     * @Route("/{page<\d+>?1}", name="_index")
      */
-    public function index(AdRepository $repo)
+    public function index(AdRepository $repo, $page = 1)
     {
-        $ads = $repo->findAll();
+        $limit = 10;
+        $start = $page * $limit - $limit;
+
+        $ads   = $repo->findAllWithPagination($start, $limit);
+        $total = $repo->countAll();
+
+        $pages = ceil($total / $limit);
 
         return $this->render('ad/index.html.twig', [
-            'ads' => $ads
+            'ads' => $ads,
+            'page' => $page,
+            'pages' => $pages
         ]);
     }
 

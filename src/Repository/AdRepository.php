@@ -36,6 +36,18 @@ class AdRepository extends ServiceEntityRepository
     }
     */
 
+    public function findAllWithPagination($start = 0, $end = 10){
+        return $this->createQueryBuilder('a')
+                    ->setFirstResult($start)
+                    ->setMaxResults($end)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function countAll(){
+        return $this->getEntityManager()->createQuery('SELECT COUNT(a.id) FROM App\Entity\Ad a')->getSingleScalarResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?Ad
     {

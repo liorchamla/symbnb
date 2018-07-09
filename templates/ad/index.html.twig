@@ -10,6 +10,10 @@
                 {% include 'partials/ad.html.twig' %}
             {% endfor %}
         </div>
+
+        {% set route = 'ads_index' %}
+        {% set routeParams = {} %}
+        {% include 'partials/pagination.html.twig' %}
     </div>
 </section>
 {% endblock %}
