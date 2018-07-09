@@ -36,10 +36,17 @@ class AdRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAllWithPagination($start = 0, $end = 10){
+    public function findAllWithPagination($page = 1, $maxResults = 10, $sort = 'a.id', $direction = 'DESC'){
+        if($sort == 'avgRatings') $sort = 'AVG(c.rating)';
+
+        $start = $page * $maxResults - $maxResults;
+
         return $this->createQueryBuilder('a')
+                    ->join('a.comments', 'c')
+                    ->orderBy($sort, $direction)
+                    ->groupBy('a.id')
                     ->setFirstResult($start)
-                    ->setMaxResults($end)
+                    ->setMaxResults($maxResults)
                     ->getQuery()
                     ->getResult();
     }

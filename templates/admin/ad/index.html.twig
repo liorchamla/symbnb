@@ -3,7 +3,7 @@
 {% block body %}
     <section class="admin-ads">
         <div class="container-fluid">
-            <h1 class="my-3">Gestion des annonces</h1>
+            {% include 'partials/sort.html.twig' %}
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -35,6 +35,8 @@
                     {% endfor %}
                 </tbody>
             </table>
+            
+        {% include 'partials/pagination.html.twig' %}
         </div>
     </section>
 {% endblock %}

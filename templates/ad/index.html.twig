@@ -5,14 +5,13 @@
 {% block body %}
 <section class="ads py-5">
     <div class="container">
+        {% include 'partials/sort.html.twig' %}
         <div class="row">
             {% for ad in ads %}
                 {% include 'partials/ad.html.twig' %}
             {% endfor %}
         </div>
 
-        {% set route = 'ads_index' %}
-        {% set routeParams = {} %}
         {% include 'partials/pagination.html.twig' %}
     </div>
 </section>

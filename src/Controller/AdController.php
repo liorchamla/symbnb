@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ad;
 use App\Form\AdType;
+use App\Service\CustomSorting;
 use App\Repository\AdRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,20 +20,30 @@ class AdController extends Controller
     /**
      * @Route("/{page<\d+>?1}", name="_index")
      */
-    public function index(AdRepository $repo, $page = 1)
+    public function index(AdRepository $repo, $page = 1, Request $request, CustomSorting $customSort)
     {
-        $limit = 10;
-        $start = $page * $limit - $limit;
+        $sort       = $request->query->get('sort') ?? "a.id";
+        $direction  = $request->query->get('direction') ?? "DESC";
 
-        $ads   = $repo->findAllWithPagination($start, $limit);
-        $total = $repo->countAll();
+        $customSort->setTitle('Nos annonces')
+                   ->setSortFields([
+                       'a.id' => 'Date de création',
+                       'a.price' => 'Prix par nuit',
+                       'avgRatings' => 'Note moyenne',
+                       'a.rooms' => "Nombre de chambres"
+                   ]);
 
-        $pages = ceil($total / $limit);
+        $total      = $repo->countAll();
+        $maxResults = 10;
+        $pages      = ceil($total / $maxResults);
+        
+        $ads        = $repo->findAllWithPagination($page, $maxResults, $sort, $direction);
 
         return $this->render('ad/index.html.twig', [
             'ads' => $ads,
             'page' => $page,
-            'pages' => $pages
+            'pages' => $pages,
+            'headerData' => $customSort->getData()
         ]);
     }
 
