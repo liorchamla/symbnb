@@ -1,58 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{ controller_name }}!{% endblock %}
-
 {% block body %}
 <div class="container">
     <div class="jumbotron">
-      <h1 class="display-3">Hello, world!</h1>
-      <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+      <h1 class="display-3">Bienvenue sur SymBnB !</h1>
+      <p class="lead">Nous permettons aux voyageurs de trouver des opportunités de logement et aux propriétaires de gagner un peu d'argent !</p>
       <hr class="my-4">
-      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+      <p>Vous allez quelque part ? Pourquoi ne pas regarder si nous avons une opportunité de logements pour vous ?!</p>
       <p class="lead">
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <a class="btn btn-primary btn-lg" href="{{path('ads_index')}}" role="button">Voir les appartements</a>
       </p>
     </div>
     
     <section class="ads">
-        <h2 class="h1 my-5">Voyez tous nos appartements ! </h2>
+        <h2 class="h1 my-5">Nos appartements stars ! </h2>
         <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-light mb-3">
-                  <div class="card-header">Header</div>
-                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
-
-                  <div class="card-body">
-                    <h4 class="card-title">Light card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-light mb-3">
-                  <div class="card-header">Header</div>
-                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
-
-                  <div class="card-body">
-                    <h4 class="card-title">Light card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-light mb-3">
-                  <div class="card-header">Header</div>
-                    <img style="height: 200px; width: 100%; display: block;" src="http://placehold.it/700x300" alt="Card image">
-
-                  <div class="card-body">
-                    <h4 class="card-title">Light card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary float-right">En savoir plus !</a>
-                  </div>
-                </div>
-            </div>
+          {% for ad in starAds %}
+            {% include 'partials/ad.html.twig' %}
+          {% endfor %}
         </div>
     </section>
     
@@ -60,30 +25,28 @@
         <h2 class="h1 my-5">Nos propriétaires stars !</h2>
         
         <div class="row">
+          {% for data in starUsers %}
+            {% set user = data.0 %}
             <div class="col">
                 <div class="card border-secondary mb-3">
                   {#<div class="card-header">Header</div>#}
                   <div class="card-body">
-                    <h4 class="card-title">Secondary card title</h4>
+                    <h4 class="card-title float-left mr-2">
+                      {{user.firstName}} {{user.lastName}} 
+                      {% set rating = data.avgRatings %}
+                      {% include 'partials/rating.html.twig' %}
+                    </h4>
+                    <div class="clearfix"></div>
+                    <hr>
                     <div class="card-text">
-                        <img class="float-left mr-3" src="http://placehold.it/64x64" />
-                        <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <img class="float-left avatar avatar-medium mr-3" src="{{user.picture}}" />
+                        <p>{{user.description|striptags|slice(0, 150)}} ...</p>
+                        <a href="{{ path('user_profile', {'slug': user.slug}) }}" class="float-right btn btn-success">Découvrir {{user.firstName}}</a>
                     </div>
                   </div>
                 </div>
             </div>
-             <div class="col">
-                <div class="card border-secondary mb-3">
-                  {#<div class="card-header">Header</div>#}
-                  <div class="card-body">
-                    <h4 class="card-title">Secondary card title</h4>
-                    <div class="card-text">
-                        <img class="float-left mr-3" src="http://placehold.it/64x64" />
-                        <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
+          {% endfor %}
         </div>
     </section>
 </div>

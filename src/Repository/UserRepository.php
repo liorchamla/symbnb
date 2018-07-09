@@ -36,6 +36,19 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
+    public function findStarUsers() {
+        return $this->createQueryBuilder('u')
+                    ->join('u.ads', 'a')
+                    ->join('a.comments', 'c')
+                    ->select('u, AVG(c.rating) as avgRatings, COUNT(c.id) as sumComments, COUNT(a.id) as sumAds')
+                    ->groupBy('u.id')
+                    ->orderBy('avgRatings', 'DESC')
+                    ->having('sumComments > 3')
+                    ->setMaxResults(2)
+                    ->getQuery()
+                    ->getResult();
+    }
+
     /*
     public function findOneBySomeField($value): ?User
     {
